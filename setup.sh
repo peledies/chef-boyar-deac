@@ -166,6 +166,12 @@ chef () {
   chef-client --version
 }
 
+read -p "${cyan}Do you want to setup wifi: [y/n]" answer
+case "${answer}" in
+    [yY])
+        wifi;;
+esac
+
 read -p "${cyan}Do you want to do the general setup: [y/n]" answer
 case "${answer}" in
     [yY])
@@ -176,12 +182,6 @@ read -p "${cyan}Do you want to setup avahi: [y/n]" answer
 case "${answer}" in
     [yY])
         avahi;;
-esac
-
-read -p "${cyan}Do you want to setup wifi: [y/n]" answer
-case "${answer}" in
-    [yY])
-        wifi;;
 esac
 
 read -p "${cyan}Do you want to setup chef: [y/n]" answer
