@@ -166,26 +166,124 @@ chef () {
   chef-client --version
 }
 
-read -p "${cyan}Do you want to setup wifi: [y/n]" answer
+purge () {
+  gui="
+    gstreamer1.0-x gstreamer1.0-omx gstreamer1.0-plugins-base
+    gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-alsa
+    gstreamer1.0-libav
+    epiphany-browser
+    lxde lxtask menu-xdg gksu
+    xpdf gtk2-engines alsa-utils
+    netsurf-gtk zenity
+    desktop-base lxpolkit
+    weston
+    omxplayer
+    raspberrypi-artwork
+    lightdm gnome-themes-standard-data gnome-icon-theme
+    qt50-snapshot qt50-quick-particle-examples
+    lxappearance
+    lxde-common lxde-icon-theme
+    lxinput
+    lxpanel
+    lxrandr
+    lxsession-edit
+    lxshortcut
+    lxterminal
+  "
+  edu="
+    idle python3-pygame python-pygame python-tk
+    idle3 python3-tk
+    python3-rpi.gpio
+    python-serial python3-serial
+    python-picamera python3-picamera
+    debian-reference-en dillo x2x
+    scratch nuscratch
+    raspberrypi-ui-mods
+    timidity
+    smartsim penguinspuzzle
+    pistore
+    sonic-pi
+    python3-numpy
+    python3-pifacecommon python3-pifacedigitalio python3-pifacedigital-scratch-handler python-pifacecommon python-pifacedigitalio
+    oracle-java8-jdk
+    minecraft-pi python-minecraftpi
+    wolfram-engine
+  "
+  x11="
+    obconf
+    openbox
+    raspberrypi-artwork
+    xarchiver
+    xinit
+    xserver-xorg
+    xserver-xorg-video-fbdev
+    x11-utils
+    x11-common
+    x11-session
+    utils
+    xserver-xorg-video-fbturbo
+  "
+  read -p "${cyan}Do you want to remove GUI components: [y/n]${gold} " answer
+  case "${answer}" in
+      [yY])
+        echo "${gold}--- Removing unnecessary GUI files ---${green}"
+        for i in $gui; do
+          echo apt-get -y remove --purge $i
+        done
+  esac
+
+  read -p "${cyan}Do you want to remove Educational components: [y/n]${gold} " answer
+  case "${answer}" in
+      [yY])
+        # aparently raspberrypi-ui-mods removes this file. we need it for wifi
+        cp /etc/network/interfaces /etc/network/interfaces.bak
+        echo "${gold}--- Removing unnecessary Educational files ---${green}"
+        for i in $edu; do
+          apt-get -y remove --purge $i
+        done
+        mv /etc/network/interfaces.bak /etc/network/interfaces
+  esac
+
+  read -p "${cyan}Do you want to remove X11 components: [y/n]${gold} " answer
+  case "${answer}" in
+      [yY])
+        echo "${gold}--- Removing unnecessary X11 files ---${green}"
+        for i in $x11; do
+          echo apt-get -y remove --purge $i
+        done
+  esac
+
+
+  # Clean up unused packages
+  apt-get -y autoremove
+}
+
+read -p "${cyan}Do you want to setup wifi: [y/n]${gold} " answer
 case "${answer}" in
     [yY])
         wifi;;
 esac
 
-read -p "${cyan}Do you want to do the general setup: [y/n]" answer
+read -p "${cyan}Do you want to do the general setup: [y/n]${gold} " answer
 case "${answer}" in
     [yY])
         general;;
 esac
 
-read -p "${cyan}Do you want to setup avahi: [y/n]" answer
+read -p "${cyan}Do you want to setup avahi: [y/n]${gold} " answer
 case "${answer}" in
     [yY])
         avahi;;
 esac
 
-read -p "${cyan}Do you want to setup chef: [y/n]" answer
+read -p "${cyan}Do you want to setup chef: [y/n]${gold} " answer
 case "${answer}" in
     [yY])
         chef;;
+esac
+
+read -p "${cyan}Do you want to purge unnecessary GUI files to save space (≈500mb): [y/n]${gold} " answer
+case "${answer}" in
+    [yY])
+        purge;;
 esac

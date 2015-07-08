@@ -30,3 +30,20 @@ $ cd /media/usb
 ```
 $ ./setup.sh
 ```
+
+###Purging GUI files
+
+**Before**
+```
+pi@raspberrypi ~ $ df -h /dev/root
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/root       2.9G  2.8G     0 100% /
+```
+**After**
+```
+pi@raspberrypi ~ $ df -h /dev/root
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/root       2.9G  2.0G  816M  71% /
+```
+
+**Storage Freed ≈ 800mb**
