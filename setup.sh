@@ -60,6 +60,20 @@ wifi () {
   ifup wlan0
 }
 
+##################################
+# Disable Wifi dongle power save #
+##################################
+wifi_power_management () {
+  echo "${gold}--- Disabling power save for wireless adapter ---${green}"
+
+  printf '# Disable power management\n' > /etc/modprobe.d/8192cu.conf
+  printf 'options 8192cu rtw_power_mgnt=0 rtw_enusbss=1 rtw_ips_mode=1' >> /etc/modprobe.d/8192cu.conf
+
+  # we may require some wifi reconnection cron job to reconnect when a gateway
+  # is turned off then back on. see example.
+  # https://www.raspberrypi.org/forums/viewtopic.php?t=61665#p507263
+}
+
 ###################
 # Configure Avahi #
 ###################
@@ -263,6 +277,12 @@ case "${answer}" in
     [yY])
         wifi;;
 esac
+read -p "${cyan}Do you want to disable power saving for wifi. This will make the unit more responsive after extended idle times: [y/n]${gold} " answer
+case "${answer}" in
+    [yY])
+        wifi_power_management;;
+esac
+
 
 read -p "${cyan}Do you want to do the general setup: [y/n]${gold} " answer
 case "${answer}" in
