@@ -1,7 +1,7 @@
 install_LCD_show () {
   echo_start
   echo -n "${gold}Downloading LCD-show${green}"
-  wget -O ~/ http://www.spotpear.com/download/diver24-5/LCD-show-151102.tar.gz
+  wget -O ~/LCD-show-151102.tar.gz http://www.spotpear.com/download/diver24-5/LCD-show-151102.tar.gz
   test_for_success $?
 
   echo_start
