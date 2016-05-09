@@ -510,6 +510,11 @@ _menu () {
   echo "${magenta}  13 ${green}- Install Apache, PHP"
   echo "${magenta}  14 ${green}- Install Nginx, PHP"
   echo "${magenta}  15 ${green}- Grant www-data access to iwlist"
+  echo "${magenta}  16 ${green}- Install LCD-show for GPIO attached LCD"
+  echo "${magenta}  17 ${green}- Switch to GPIO LCD"
+  echo "${magenta}  18 ${green}- Switch to HDMI output"
+
+
 
   while true; do
     read -p "${cyan} Select an option from the list above: ${gold}" answer
@@ -529,7 +534,9 @@ _menu () {
       13 ) clear; install_apache; install_php; break;;
       14 ) clear; install_nginx; install_php_fpm; break;;
       15 ) clear; www_sudo; break;;
-
+      16 ) clear; install_LCD_show; break;;
+      17 ) clear; switch_to_LCD; break;;
+      18 ) clear; switch_to_HDMI; break;;
       * ) echo "Please select a valid option.";;
     esac
   done
