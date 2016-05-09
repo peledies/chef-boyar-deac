@@ -1,5 +1,7 @@
 #!/bin/bash
 
+source $(dirname $0)/lcd_show.sh
+
 green=$(tput setaf 2)
 gold=$(tput setaf 3)
 magenta=$(tput setaf 5)
