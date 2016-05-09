@@ -18,6 +18,6 @@ switch_to_LCD () {
 
 switch_to_HDMI () {
   cd ~/LCD-show
-  sudo ./HDMI-show
+  sudo ./LCD-hdmi
   cd .
 }
