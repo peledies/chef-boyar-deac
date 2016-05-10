@@ -6,6 +6,7 @@ green=$(tput setaf 2)
 gold=$(tput setaf 3)
 magenta=$(tput setaf 5)
 cyan=$(tput setaf 6)
+default=$(tput sgr0)
 
 BOOTUP=color
 RES_COL=0
@@ -82,7 +83,7 @@ fi
 # wireless network setup #
 ##########################
 wifi () {
-  echo "${gold}--- Setting up WIFI ---${green}"
+  echo "${gold}--- Setting up WIFI ---${default}"
 
   read -p "${cyan}Do you want to list nearby wifi: [y/n]" answer
   case "${answer}" in
@@ -95,18 +96,18 @@ wifi () {
 
   echo "${cyan}Enter password:${gold}"
   read password
-  echo "${green}"
+  echo "${default}"
 
   timestamp=$(date +%s)
 
   echo_start
-  echo -n "${gold}Creating backup interfaces file [${magenta}/etc/network/interfaces.$timestamp.BACKUP${gold}]${green}"
+  echo -n "${gold}Creating backup interfaces file [${magenta}/etc/network/interfaces.$timestamp.BACKUP${gold}]${default}"
   # create a backup file
   cp /etc/network/interfaces /etc/network/interfaces.$timestamp.BACKUP
   test_for_success $?
 
   echo_start
-  echo -n "${gold}Writing configuration to interfaces config file [${magenta}/etc/network/interfaces${gold}]${green}"
+  echo -n "${gold}Writing configuration to interfaces config file [${magenta}/etc/network/interfaces${gold}]${default}"
   cat <<EOF > /etc/network/interfaces
 auto lo
 iface lo inet loopback
@@ -122,7 +123,7 @@ EOF
   test_for_success $?
 
   echo_start
-  echo -n "${gold}Restarting wlan0${green}"
+  echo -n "${gold}Restarting wlan0${default}"
   ifdown wlan0 > /dev/null 2>&1 && ifup wlan0 > /dev/null 2>&1
   test_for_success $?
 
@@ -150,7 +151,7 @@ scan_wifi () {
   H_THREE="\\033[51G"
 
   printf "\n\r${cyan} ${bold}${H_ONE}ESSID ${H_TWO}Security ${H_THREE}Signal \n\r"
-  printf "==========================================================${green}\n\r"
+  printf "==========================================================${default}\n\r"
   iwlist wlan0 scan | while read line
   do
      case $line in
@@ -176,10 +177,10 @@ scan_wifi () {
 # Disable Wifi dongle power save #
 ##################################
 wifi_power_management () {
-  echo "${gold}--- Disabling power save for wireless adapter ---${green}"
+  echo "${gold}--- Disabling power save for wireless adapter ---${default}"
 
   echo_start
-  echo -n "${gold}Writing configuration to interfaces config file [${magenta}/etc/network/interfaces${gold}]${green}"
+  echo -n "${gold}Writing configuration to interfaces config file [${magenta}/etc/network/interfaces${gold}]${default}"
   cat <<EOF > /etc/modprobe.d/8192cu.conf
 # Disable power management
 options 8192cu rtw_power_mgnt=0 rtw_enusbss=1 rtw_ips_mode=1
@@ -197,7 +198,7 @@ EOF
 install_apache () {
   # Install Apache2
   echo_start
-  echo -n "${gold}Installing Apache2${green}"
+  echo -n "${gold}Installing Apache2${default}"
   apt-get install apache2 -y > /dev/null 2>&1
   test_for_success $?
 }
@@ -206,17 +207,17 @@ install_apache () {
 # Install nginx #
 #################
 install_nginx () {
-  echo "${gold}--- Installing and configure Nginx ---${green}"
+  echo "${gold}--- Installing and configure Nginx ---${default}"
 
   # Install nginx
   echo_start
-  echo -n "${gold}Installing Nginx${green}"
+  echo -n "${gold}Installing Nginx${default}"
   apt-get install nginx -y > /dev/null 2>&1
   test_for_success $?
 
   # Configure nginx to work with php-fpm
   echo_start
-  echo -n "${gold}Enabling php to work with nginx [${magenta}/etc/nginx/sites-enabled/default${gold}]${green}"
+  echo -n "${gold}Enabling php to work with nginx [${magenta}/etc/nginx/sites-enabled/default${gold}]${default}"
   cat <<EOF > /etc/nginx/sites-enabled/default
 server {
   root /var/www;
@@ -237,7 +238,7 @@ EOF
 
   # Reload nginx default configuration
   echo_start
-  echo -n "${gold}Reloading nginx default host${green}"
+  echo -n "${gold}Reloading nginx default host${default}"
   sudo /etc/init.d/nginx reload > /dev/null 2>&1
   test_for_success $?
 }
@@ -248,7 +249,7 @@ EOF
 install_php () {
   # Install php
   echo_start
-  echo -n "${gold}Installing PHP${green}"
+  echo -n "${gold}Installing PHP${default}"
   apt-get install php5 libapache2-mod-php5 -y > /dev/null 2>&1
   test_for_success $?
 }
@@ -258,7 +259,7 @@ install_php () {
 install_php_fpm () {
   # Install php-fpm
   echo_start
-  echo -n "${gold}Installing PHP${green}"
+  echo -n "${gold}Installing PHP${default}"
   apt-get install php5-fpm -y > /dev/null 2>&1
   test_for_success $?
 }
@@ -268,7 +269,7 @@ install_php_fpm () {
 ########################
 www_sudo () {
   echo_start
-  echo -n "${gold}Give www-data passwordless access to iwlist${green}"
+  echo -n "${gold}Give www-data passwordless access to iwlist${default}"
   sudo echo "www-data ALL=(ALL) NOPASSWD: /sbin/iwlist" >> /etc/sudoers
   test_for_success $?
 }
@@ -277,7 +278,7 @@ www_sudo () {
 # Configure Avahi #
 ###################
 avahi () {
-  echo "${gold}--- Installing and configure Avahi ---${green}"
+  echo "${gold}--- Installing and configure Avahi ---${default}"
   read -p "${cyan}Do you want to give this board a unique name (Default = raspberrypi): [y/n]" answer
   case "${answer}" in
     [yY])
@@ -291,13 +292,13 @@ avahi () {
 
   # Install Avahi-daemon
   echo_start
-  echo -n "${gold}Installing Avahi${green}"
+  echo -n "${gold}Installing Avahi${default}"
   apt-get install avahi-daemon -y > /dev/null 2>&1
   test_for_success $?
 
   # set avahi-daemon to start in run modes
   echo_start
-  echo -n "${gold}Setting Avahi to start in all run levels${green}"
+  echo -n "${gold}Setting Avahi to start in all run levels${default}"
   sudo update-rc.d avahi-daemon defaults > /dev/null 2>&1
   test_for_success $?
 
@@ -305,19 +306,19 @@ avahi () {
   
   # create a backup file
   echo_start
-  echo -n "${gold}Creating backup config file [${magenta}/etc/avahi/avahi-daemon.BACKUP.$timestamp.conf${gold}]${green}"
+  echo -n "${gold}Creating backup config file [${magenta}/etc/avahi/avahi-daemon.BACKUP.$timestamp.conf${gold}]${default}"
   cp /etc/avahi/avahi-daemon.conf /etc/avahi/avahi-daemon.BACKUP.$timestamp.conf
   test_for_success $?
 
   echo_start
-  echo -n "${gold}Writing changes to conf file [${magenta}/etc/avahi/avahi-daemon.conf${gold}]${green}"
+  echo -n "${gold}Writing changes to conf file [${magenta}/etc/avahi/avahi-daemon.conf${gold}]${default}"
   sudo sed -i "/host-name=/c\host-name=$NAME" /etc/avahi/avahi-daemon.conf
   sudo sed -i '/domain-name=/c\domain-name=local' /etc/avahi/avahi-daemon.conf
   sudo sed -i '/publish-addresses=/c\publish-addresses=yes' /etc/avahi/avahi-daemon.conf
   test_for_success $?
   
   echo_start
-  echo -n "${gold}Restarting Avahi${green}"
+  echo -n "${gold}Restarting Avahi${default}"
   /etc/init.d/avahi-daemon restart > /dev/null 2>&1
   test_for_success $?
 }
@@ -328,7 +329,7 @@ avahi () {
 general () {
   # Install VIM
   echo_start
-  echo -n "${gold}Installing VIM${green}"
+  echo -n "${gold}Installing VIM${default}"
   sudo apt-get install vim -y > /dev/null 2>&1
   test_for_success $?
 
@@ -347,7 +348,7 @@ general () {
 
   # Install git
   echo_start
-  echo -n "${gold}Installing git${green}"
+  echo -n "${gold}Installing git${default}"
   apt-get install git -y > /dev/null 2>&1
   test_for_success $?
 }
@@ -357,31 +358,31 @@ chef () {
   # http://everydaytinker.com/raspberry-pi/installing-chef-client-on-a-raspberry-pi-2-model-b/
 
   #Chef requires ruby >= 2.0
-  echo "${gold}--- Updating Aptitude package library ---${green}"
+  echo "${gold}--- Updating Aptitude package library ---${default}"
   apt-get update
   
-  echo "${gold}--- Removing ruby 1.9 ---${green}"
+  echo "${gold}--- Removing ruby 1.9 ---${default}"
   apt-get purge ruby1.9 -y
 
   # install our build dependencie
-  echo "${gold}--- install chef build dependencies ---${green}"
+  echo "${gold}--- install chef build dependencies ---${default}"
   apt-get install build-essential libyaml-dev libssl-dev
 
   # download ruby 2.2.2
-  echo "${gold}--- Downloading ruby 2.2.2 ---${green}"
+  echo "${gold}--- Downloading ruby 2.2.2 ---${default}"
   wget http://cache.ruby-lang.org/pub/ruby/2.2/ruby-2.2.2.tar.gz
 
   # untar and enter the Ruby source directory
-  echo "${gold}--- unpacking ruby 2.2.2 ---${green}"
+  echo "${gold}--- unpacking ruby 2.2.2 ---${default}"
   tar -xvzf ruby-2.2.2.tar.gz
   cd ruby-2.2.2
 
   # Run the configure script to prepare for compiling
-  echo "${gold}--- Run the configure script to prepare for compiling ---${green}"
+  echo "${gold}--- Run the configure script to prepare for compiling ---${default}"
   ./configure --enable-shared --disable-install-doc --disable-install-rdoc --disable-install-capi
 
   # This will install Ruby to /usr/local/bin/ruby by default.
-  echo "${gold}--- install Ruby to /usr/local/bin/ruby ---${green}"
+  echo "${gold}--- install Ruby to /usr/local/bin/ruby ---${default}"
   make install
 
   # Logout and log back in to ensure your path picks up the new Ruby
@@ -391,11 +392,11 @@ chef () {
   echo "gem: --no-document" >> ~/.gemrc
 
   # install the Chef Rubygem without documentation
-  echo "${gold}--- Install the Chef Rubygem without documentation ---${green}"
+  echo "${gold}--- Install the Chef Rubygem without documentation ---${default}"
   gem install chef --no-ri --no-rdoc
 
   # show chef-server version
-  echo "${gold}--- Chef has been installed to the following version ---${green}"
+  echo "${gold}--- Chef has been installed to the following version ---${default}"
   chef-client --version
 }
 
@@ -440,12 +441,12 @@ purge_gui () {
   read -p "${cyan}Are you sure you want to remove all GUI components: [y/n]${gold} " answer
   case "${answer}" in
       [yY])
-        echo "${gold}--- Removing unnecessary GUI files ---${green}"
+        echo "${gold}--- Removing unnecessary GUI files ---${default}"
         for i in $gui; do
           echo apt-get -y remove --purge $i
         done
 
-        echo "${gold}--- Removing unnecessary X11 files ---${green}"
+        echo "${gold}--- Removing unnecessary X11 files ---${default}"
         for i in $x11; do
           echo apt-get -y remove --purge $i
         done
@@ -480,7 +481,7 @@ purge_educational (){
       [yY])
         # aparently raspberrypi-ui-mods removes this file. we need it for wifi
         cp /etc/network/interfaces /etc/network/interfaces.bak
-        echo "${gold}--- Removing unnecessary Educational files ---${green}"
+        echo "${gold}--- Removing unnecessary Educational files ---${default}"
         for i in $edu; do
           apt-get -y remove --purge $i
         done
@@ -497,24 +498,24 @@ _menu () {
   clear
   echo "${cyan}  Choose an Option"
   echo " ===================${normal}"
-  echo "${magenta}  1 ${green}- Wifi Access Point"
-  echo "${magenta}  2 ${green}- Wifi Client"
-  echo "${magenta}  3 ${green}- Configure IP - Static"
-  echo "${magenta}  4 ${green}- Configure IP - DHCP"
-  echo "${magenta}  5 ${green}- Current Status"
-  echo "${magenta}  6 ${green}- Wifi Scan"
-  echo "${magenta}  7 ${green}- Disable power saving for wifi"
-  echo "${magenta}  8 ${green}- Configure Avahi (zeroconf)"
-  echo "${magenta}  9 ${green}- Install Chef"
-  echo "${magenta}  10 ${green}- Remove Educational components"
-  echo "${magenta}  11 ${green}- Remove GUI components"
-  echo "${magenta}  12 ${green}- Install VIM, GIT"
-  echo "${magenta}  13 ${green}- Install Apache, PHP"
-  echo "${magenta}  14 ${green}- Install Nginx, PHP"
-  echo "${magenta}  15 ${green}- Grant www-data access to iwlist"
-  echo "${magenta}  16 ${green}- Install LCD-show for GPIO attached LCD"
-  echo "${magenta}  17 ${green}- Switch to GPIO LCD"
-  echo "${magenta}  18 ${green}- Switch to HDMI output"
+  echo "${magenta}  1 ${default}- Wifi Access Point"
+  echo "${magenta}  2 ${default}- Wifi Client"
+  echo "${magenta}  3 ${default}- Configure IP - Static"
+  echo "${magenta}  4 ${default}- Configure IP - DHCP"
+  echo "${magenta}  5 ${default}- Current Status"
+  echo "${magenta}  6 ${default}- Wifi Scan"
+  echo "${magenta}  7 ${default}- Disable power saving for wifi"
+  echo "${magenta}  8 ${default}- Configure Avahi (zeroconf)"
+  echo "${magenta}  9 ${default}- Install Chef"
+  echo "${magenta}  10 ${default}- Remove Educational components"
+  echo "${magenta}  11 ${default}- Remove GUI components"
+  echo "${magenta}  12 ${default}- Install VIM, GIT"
+  echo "${magenta}  13 ${default}- Install Apache, PHP"
+  echo "${magenta}  14 ${default}- Install Nginx, PHP"
+  echo "${magenta}  15 ${default}- Grant www-data access to iwlist"
+  echo "${magenta}  16 ${default}- Install LCD-show for GPIO attached LCD"
+  echo "${magenta}  17 ${default}- Switch to GPIO LCD"
+  echo "${magenta}  18 ${default}- Switch to HDMI output"
 
 
 
