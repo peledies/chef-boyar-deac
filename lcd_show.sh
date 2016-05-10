@@ -10,9 +10,19 @@ install_LCD_show () {
   test_for_success $?
 
   echo_start
-  echo -n "${gold}Cleaning up install files${default}"
+  echo -n "${gold}Cleaning up downloaded files${default}"
   rm /opt/LCD-show-151102.tar.gz > /dev/null 2>&1
   test_for_success $?
+
+  echo_start
+  echo -n "${gold}Creating absolute path variable in LCD-show scripts${default}"
+  sed -i '1s/^/DIR=$(dirname $0)\n/' <<< ls /opt/LCD-show/LCD* > /dev/null 2>&1
+  test_for_success $?
+
+  echo_start
+  echo -n "${gold}Updating LCD-show scripts to use absolute path variable${default}"
+  sed -i 's/\.\//$DIR\//g' <<< ls /opt/LCD-show/LCD* > /dev/null 2>&1
+  test_for_success $?  
 }
 
 switch_to_LCD () {
