@@ -1,76 +1,10 @@
 #!/bin/bash
 
-source $(dirname $0)/lcd_show.sh
+pushd $(dirname $0) > /dev/null; SCRIPTPATH=$(pwd); popd > /dev/null
 
-green=$(tput setaf 2)
-gold=$(tput setaf 3)
-magenta=$(tput setaf 5)
-cyan=$(tput setaf 6)
-default=$(tput sgr0)
+source $SCRIPTPATH/assets/pretty_tasks.sh
+source $SCRIPTPATH/assets/info_box.sh
 
-BOOTUP=color
-RES_COL=0
-RES_COL_B=20
-MOVE_TO_COL_B="echo -en \\033[${RES_COL_B}G"
-MOVE_TO_COL="echo -en \\033[${RES_COL}G"
-SETCOLOR_SUCCESS="echo -en \\033[1;32m"
-SETCOLOR_FAILURE="echo -en \\033[1;31m"
-SETCOLOR_WARNING="echo -en \\033[1;33m"
-SETCOLOR_NORMAL="echo -en \\033[0;39m"
-
-echo_start() {
-  [ "$BOOTUP" = "color" ] && $MOVE_TO_COL
-  echo -n "["
-  [ "$BOOTUP" = "color" ] && $SETCOLOR_SUCCESS
-  echo -n $"..."
-  [ "$BOOTUP" = "color" ] && $SETCOLOR_NORMAL
-  echo -n "]"
-  $MOVE_TO_COL_B
-  return 0
-}
-
-echo_success() {
-  [ "$BOOTUP" = "color" ] && $MOVE_TO_COL
-  echo -n "["
-  [ "$BOOTUP" = "color" ] && $SETCOLOR_SUCCESS
-  echo -n $" OK "
-  [ "$BOOTUP" = "color" ] && $SETCOLOR_NORMAL
-  echo -n "]"
-  echo -ne "\n"
-  return 0
-}
-
-echo_done() {
-  [ "$BOOTUP" = "color" ] && $MOVE_TO_COL
-  echo -n "["
-  [ "$BOOTUP" = "color" ] && $SETCOLOR_SUCCESS
-  echo -n $" DONE "
-  [ "$BOOTUP" = "color" ] && $SETCOLOR_NORMAL
-  echo -n "]"
-  echo -ne "\n"
-  return 0
-}
-
-echo_failure() {
-  [ "$BOOTUP" = "color" ] && $MOVE_TO_COL
-  echo -n "["
-  [ "$BOOTUP" = "color" ] && $SETCOLOR_FAILURE
-  echo -n $"FAILED"
-  [ "$BOOTUP" = "color" ] && $SETCOLOR_NORMAL
-  echo -n "]"
-  echo -ne "\n"
-  return 1
-}
-
-test_for_success() {
-   rc=$1
-  if [[ $rc -eq 0 ]] ; then
-    echo_success
-  else
-    echo_failure
-    exit $rc
-  fi
-}
 ##########################
 # Ensure Root privileges #
 ##########################
@@ -491,9 +425,12 @@ purge_educational (){
 }
 
 setup_access_point () {
-  source $(dirname $0)/ap_setup.sh
+  source $SCRIPTPATH/ap_setup.sh
 }
 
+LCD_show () {
+  source $SCRIPTPATH/lcd_show.sh
+}
 _menu () {
   clear
   echo "${cyan}  Choose an Option"
@@ -513,11 +450,7 @@ _menu () {
   echo "${magenta}  13 ${default}- Install Apache, PHP"
   echo "${magenta}  14 ${default}- Install Nginx, PHP"
   echo "${magenta}  15 ${default}- Grant www-data access to iwlist"
-  echo "${magenta}  16 ${default}- LCD-show - Install (for GPIO attached LCD)"
-  echo "${magenta}  17 ${default}- LCD-show - Switch to GPIO LCD output"
-  echo "${magenta}  18 ${default}- LCD-show - Switch to HDMI output"
-
-
+  echo "${magenta}  16 ${default}- LCD-show - (for GPIO attached LCD's)"
 
   while true; do
     read -p "${cyan} Select an option from the list above: ${gold}" answer
@@ -537,9 +470,7 @@ _menu () {
       13 ) clear; install_apache; install_php; break;;
       14 ) clear; install_nginx; install_php_fpm; break;;
       15 ) clear; www_sudo; break;;
-      16 ) clear; install_LCD_show; break;;
-      17 ) clear; switch_to_LCD; break;;
-      18 ) clear; switch_to_HDMI; break;;
+      16 ) clear; LCD_show; break;;
       * ) echo "Please select a valid option.";;
     esac
   done
