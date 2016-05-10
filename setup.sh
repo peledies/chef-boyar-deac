@@ -513,9 +513,9 @@ _menu () {
   echo "${magenta}  13 ${default}- Install Apache, PHP"
   echo "${magenta}  14 ${default}- Install Nginx, PHP"
   echo "${magenta}  15 ${default}- Grant www-data access to iwlist"
-  echo "${magenta}  16 ${default}- Install LCD-show for GPIO attached LCD"
-  echo "${magenta}  17 ${default}- Switch to GPIO LCD"
-  echo "${magenta}  18 ${default}- Switch to HDMI output"
+  echo "${magenta}  16 ${default}- LCD-show - Install (for GPIO attached LCD)"
+  echo "${magenta}  17 ${default}- LCD-show - Switch to GPIO LCD output"
+  echo "${magenta}  18 ${default}- LCD-show - Switch to HDMI output"
 
 
 
