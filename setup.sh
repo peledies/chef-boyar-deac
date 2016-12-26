@@ -431,6 +431,24 @@ setup_access_point () {
 LCD_show () {
   source $SCRIPTPATH/lcd_show.sh
 }
+install_python_3 () {
+  RELEASE=3.5.1
+ 
+  # install dependencies
+  sudo apt-get install libbz2-dev liblzma-dev libsqlite3-dev libncurses5-dev libgdbm-dev zlib1g-dev libreadline-dev libssl-dev tk-dev
+   
+  # download and build Python
+  mkdir ~/python3
+  cd ~/python3
+  wget https://www.python.org/ftp/python/$RELEASE/Python-$RELEASE.tar.xz
+  tar xvf Python-$RELEASE.tar.xz
+  cd Python-$RELEASE
+  ./configure
+  make
+  sudo make install
+  sudo rm -rf ~/python3/Python-$RELEASE
+  cd ~
+}
 _menu () {
   clear
   echo "${cyan}  Choose an Option"
@@ -451,6 +469,7 @@ _menu () {
   echo "${magenta}  14 ${default}- Install Nginx, PHP"
   echo "${magenta}  15 ${default}- Grant www-data access to iwlist"
   echo "${magenta}  16 ${default}- LCD-show - (for GPIO attached LCD's)"
+  echo "${magenta}  17 ${default}- Python 3 - (Install Python 3.5.1)"
 
   while true; do
     read -p "${cyan} Select an option from the list above: ${gold}" answer
@@ -471,6 +490,7 @@ _menu () {
       14 ) clear; install_nginx; install_php_fpm; break;;
       15 ) clear; www_sudo; break;;
       16 ) clear; LCD_show; break;;
+      17 ) clear; install_python_3; break;;
       * ) echo "Please select a valid option.";;
     esac
   done
