@@ -435,7 +435,7 @@ install_python_3 () {
   RELEASE=3.5.1
  
   # install dependencies
-  sudo apt-get install libbz2-dev liblzma-dev libsqlite3-dev libncurses5-dev libgdbm-dev zlib1g-dev libreadline-dev libssl-dev tk-dev
+  sudo apt-get install -y libbz2-dev liblzma-dev libsqlite3-dev libncurses5-dev libgdbm-dev zlib1g-dev libreadline-dev libssl-dev tk-dev
    
   # download and build Python
   mkdir ~/python3
