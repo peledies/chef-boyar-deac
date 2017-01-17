@@ -512,7 +512,7 @@ _menu () {
       16 ) clear; LCD_show; break;;
       17 ) clear; install_python_3; break;;
       18 ) clear; install_fauxmo; break;;
-      19 ) clear; enable_ssh; break::
+      19 ) clear; enable_ssh; break;;
 
       * ) echo "Please select a valid option.";;
     esac
