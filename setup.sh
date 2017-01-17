@@ -449,6 +449,23 @@ install_python_3 () {
   sudo rm -rf ~/python3/Python-$RELEASE
   cd ~
 }
+install_fauxmo () {
+  python3 -m pip install fauxmo
+  Make a config.json based on config-sample.json
+  fauxmo -c config.json [-v]
+
+  # Recommended: add an unprivileged user to run Fauxmo: 
+  sudo useradd -r -s /bin/false fauxmo
+  # NB: Fauxmo may require root privileges if you’re using ports below 1024
+  sudo cp extras/fauxmo.service /etc/systemd/system/fauxmo.service
+  # Edit the paths in /etc/systemd/system/fauxmo.service
+  sudo systemctl enable fauxmo.service
+  sudo systemctl start fauxmo.service
+}
+enable_ssh () {
+  sudo systemctl enable ssh.socket
+  sudo service ssh restart
+}
 _menu () {
   clear
   echo "${cyan}  Choose an Option"
@@ -470,6 +487,9 @@ _menu () {
   echo "${magenta}  15 ${default}- Grant www-data access to iwlist"
   echo "${magenta}  16 ${default}- LCD-show - (for GPIO attached LCD's)"
   echo "${magenta}  17 ${default}- Python 3 - (Install Python 3.5.1)"
+  echo "${magenta}  18 ${default}- Fauxmo - (wemo home automation emulator)"
+  echo "${magenta}  19 ${default}- Enable SSH Access"
+
 
   while true; do
     read -p "${cyan} Select an option from the list above: ${gold}" answer
@@ -491,6 +511,9 @@ _menu () {
       15 ) clear; www_sudo; break;;
       16 ) clear; LCD_show; break;;
       17 ) clear; install_python_3; break;;
+      18 ) clear; install_fauxmo; break;;
+      19 ) clear; enable_ssh; break::
+
       * ) echo "Please select a valid option.";;
     esac
   done
