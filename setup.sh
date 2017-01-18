@@ -466,6 +466,9 @@ enable_ssh () {
   sudo systemctl enable ssh.socket
   sudo service ssh restart
 }
+install_pyspy () {
+  source $SCRIPTPATH/install_pyspy.sh
+}
 _menu () {
   clear
   echo "${cyan}  Choose an Option"
@@ -489,6 +492,7 @@ _menu () {
   echo "${magenta}  17 ${default}- Python 3 - (Install Python 3.5.1)"
   echo "${magenta}  18 ${default}- Fauxmo - (wemo home automation emulator)"
   echo "${magenta}  19 ${default}- Enable SSH Access"
+  echo "${magenta}  20 ${default}- Install PySpy GPS logger"
 
 
   while true; do
@@ -513,6 +517,7 @@ _menu () {
       17 ) clear; install_python_3; break;;
       18 ) clear; install_fauxmo; break;;
       19 ) clear; enable_ssh; break;;
+      20 ) clear; install_pyspy; break;;
 
       * ) echo "Please select a valid option.";;
     esac
