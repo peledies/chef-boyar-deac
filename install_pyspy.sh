@@ -29,16 +29,25 @@ sudo chown -R pi:pi /home/pi/pyspy > /dev/null 2>&1
 sudo chmod 755 -R /home/pi/pyspy > /dev/null 2>&1
 test_for_success $?
 
-echo_start
-echo -n "${gold}Adding line to root crontab to start logging data on boot${default}"
-#write out current crontab
-crontab -l > ohmycron
-#echo new cron into cron file
-echo "@reboot gpspipe -w | grep lat >> /home/pi/pyspy/track.json 2>&1"  >> ohmycron
-#install new cron file
-crontab ohmycron
-rm ohmycron
-test_for_success $?
+if grep -Fxq "@reboot gpspipe -w | grep lat >> /home/pi/pyspy/track.json 2>&1" /var/spool/cron/crontabs/root
+then
+  echo_start
+  echo -n "${gold}Skipping crontab addition, line exists${default}"
+  test_for_success $?
+else
+  echo_start
+  echo -n "${gold}Adding line to root crontab to start logging data on boot${default}"
+  #write out current crontab
+  crontab -l > ohmycron
+  #echo new cron into cron file
+  echo "@reboot gpspipe -w | grep lat >> /home/pi/pyspy/track.json 2>&1"  >> ohmycron
+  #install new cron file
+  crontab ohmycron
+  rm ohmycron
+  test_for_success $?
+fi
+
+
 
 echo ""
 echo -n "${gold}You can type ${cyan}cgps${gold} to get an instant view of the gps data${default}"
