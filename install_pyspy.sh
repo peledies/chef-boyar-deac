@@ -1,23 +1,23 @@
 echo_start
 echo -n "${gold}Downloading gps driver and utilities${default}"
-sudo apt-get install gpsd gpsd-clients python-gps
+sudo apt-get install gpsd gpsd-clients python-gps > /dev/null 2>&1
 test_for_success $?
 
 #clone the py_spy.py script to the home directory
 echo_start
 echo -n "${gold}Cloning python gps script into ~/pyspy${default}"
-git clone https://github.com/peledies/pyspy.git /home/pi/pyspy
+git clone https://github.com/peledies/pyspy.git /home/pi/pyspy > /dev/null 2>&1
 test_for_success $?
 
 echo_start
 echo -n "${gold}Creating ~/pypsy/track.json${default}"
-touch /home/pi/pyspy/track.json
+touch /home/pi/pyspy/track.json > /dev/null 2>&1
 test_for_success $?
 
 echo_start
 echo -n "${gold}Modifying permissions of pyspy${default}"
-sudo chown -R pi:pi /home/pi/pyspy
-sudo chmod 755 -R /home/pi/pyspy
+sudo chown -R pi:pi /home/pi/pyspy > /dev/null 2>&1
+sudo chmod 755 -R /home/pi/pyspy > /dev/null 2>&1
 test_for_success $?
 
 echo_start
