@@ -3,6 +3,13 @@ echo -n "${gold}Downloading gps driver and utilities${default}"
 sudo apt-get install gpsd gpsd-clients python-gps > /dev/null 2>&1
 test_for_success $?
 
+if [ -d /home/pi/pyspy ]; then
+  echo_start
+  echo -n "${gold}Removing existing /home/pi/pyspy directory${default}"
+  rm -rf /home/pi/pyspy
+  test_for_success $?                                  
+fi
+
 #clone the py_spy.py script to the home directory
 echo_start
 echo -n "${gold}Cloning python gps script into ~/pyspy${default}"
