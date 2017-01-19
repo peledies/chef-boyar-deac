@@ -1,3 +1,5 @@
+info_box "Installing PySpy"
+
 echo_start
 echo -n "${gold}Downloading gps driver and utilities${default}"
 sudo apt-get install gpsd gpsd-clients python-gps > /dev/null 2>&1
@@ -38,5 +40,6 @@ crontab ohmycron
 rm ohmycron
 test_for_success $?
 
+echo ""
 echo -n "${gold}You can type ${cyan}cgps${gold} to get an instant view of the gps data${default}"
-
+echo ""
